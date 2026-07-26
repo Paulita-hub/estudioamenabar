@@ -1,9 +1,18 @@
 (() => {
   const loader = document.querySelector(".site-loader");
   if (loader) {
+    let hidden = false;
+    const removeLoader = () => {
+      if (!loader.isConnected) return;
+      loader.remove();
+    };
     const hideLoader = () => {
+      if (hidden) return;
+      hidden = true;
       window.setTimeout(() => {
         loader.classList.add("is-hidden");
+        // Si el CSS cacheado no aplica la transición, igual lo sacamos del DOM
+        window.setTimeout(removeLoader, 600);
       }, 350);
     };
 
@@ -12,13 +21,15 @@
     } else {
       window.addEventListener("load", hideLoader, { once: true });
       // Fallback por si algún asset externo nunca termina de cargar
-      window.setTimeout(hideLoader, 4000);
+      window.setTimeout(hideLoader, 2500);
     }
 
     loader.addEventListener(
       "transitionend",
-      () => {
-        if (loader.classList.contains("is-hidden")) loader.remove();
+      (event) => {
+        if (event.target === loader && loader.classList.contains("is-hidden")) {
+          removeLoader();
+        }
       },
       { once: true },
     );

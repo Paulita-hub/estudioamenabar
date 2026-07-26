@@ -170,6 +170,8 @@ body.nav-lock {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+  /* Evita que un CSS cacheado/roto deje el loader ocupando altura */
+  position: fixed !important;
 }
 
 @keyframes site-loader-credit-spin {
