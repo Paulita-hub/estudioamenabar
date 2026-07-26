@@ -150,6 +150,7 @@
 
     if (isMobile) {
       // nowrap: solo los <br> parten líneas ("desarrollo web" no se parte)
+      subtitle.style.setProperty("position", "absolute");
       subtitle.style.setProperty("white-space", "nowrap");
       subtitle.style.setProperty("text-align", "left");
       subtitle.style.setProperty("margin-left", "0");
@@ -158,12 +159,16 @@
       subtitle.style.setProperty("transform", "translateY(-50%)");
       breaks.forEach((br) => br.style.setProperty("display", "block"));
     } else {
+      // Desktop: una línea contenida en el ancho de tinta del logo
+      subtitle.style.setProperty("position", "relative");
       subtitle.style.setProperty("white-space", "nowrap");
       subtitle.style.setProperty("text-align", "left");
       subtitle.style.setProperty("margin-left", `${offsetLeft}px`);
-      subtitle.style.removeProperty("left");
-      subtitle.style.removeProperty("top");
-      subtitle.style.removeProperty("transform");
+      subtitle.style.setProperty("top", "auto");
+      subtitle.style.setProperty("left", "auto");
+      subtitle.style.setProperty("right", "auto");
+      subtitle.style.setProperty("transform", "none");
+      subtitle.style.setProperty("overflow", "hidden");
       breaks.forEach((br) => br.style.setProperty("display", "none"));
     }
 
@@ -171,7 +176,7 @@
     subtitle.style.setProperty("width", "max-content");
 
     let low = 12;
-    let high = Math.min(isMobile ? 200 : 120, targetWidth / (isMobile ? 3 : 6));
+    let high = Math.min(isMobile ? 200 : 160, targetWidth / (isMobile ? 3 : 5));
     for (let i = 0; i < 24; i += 1) {
       const mid = (low + high) / 2;
       subtitle.style.fontSize = `${mid}px`;
@@ -179,7 +184,7 @@
       else high = mid;
     }
     const subtitleSize = low;
-    // Servicios más chicos que el subtítulo; no se agrandan con el fit
+    // Servicios más chicos que el subtítulo en mobile; en desktop mismo size
     const servicesSize = isMobile ? subtitleSize / 1.286 : subtitleSize;
     subtitle.style.fontSize = `${subtitleSize}px`;
     subtitle.style.setProperty("width", `${targetWidth}px`);

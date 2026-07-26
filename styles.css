@@ -1011,25 +1011,42 @@ button:hover {
   }
 
   .hero__brand {
-    --hero-logo-h: min(52vw, 30rem);
+    --hero-logo-w: calc(100vw - 2 * var(--page-padding));
+    --hero-logo-h: calc(var(--hero-logo-w) * 386 / 1164);
     --hero-circle: var(--hero-logo-h);
+    width: var(--hero-logo-w);
+    max-width: var(--hero-logo-w);
     align-items: stretch;
     gap: clamp(0.75rem, 1.5vw, 1.35rem);
   }
 
+  .hero__logo {
+    width: 100%;
+    max-width: 100%;
+  }
+
   .hero__logo-img {
-    height: var(--hero-logo-h);
-    width: auto;
-    max-width: none;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
   }
 
   .hero__subtitle {
     display: block;
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
     width: 100%;
+    max-width: 100%;
+    margin: 0;
     font-size: var(--text-hero-subtitle);
     font-weight: 700;
     letter-spacing: normal;
     text-align: left;
+    white-space: nowrap;
+    transform: none;
+    overflow: hidden;
   }
 }
 
