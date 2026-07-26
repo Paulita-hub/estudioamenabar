@@ -47,6 +47,7 @@
   --text-marquee: clamp(0.98rem, 1.943vw, 28px);
   --text-body: clamp(1.125rem, 2.43vw, 35px);
   --text-service: clamp(2.5rem, 6.94vw, 100px);
+  --text-hero-subtitle: clamp(1.35rem, 2.4vw, 2.35rem);
   --media-height: clamp(8rem, 15.4vw, 222px);
   --glass-bg: rgba(255, 255, 255, 0.65);
   --glass-border: rgba(255, 255, 255, 0.85);
@@ -304,6 +305,10 @@ button:hover {
     opacity 320ms var(--ease-out);
 }
 
+.site-header__logo {
+  display: none;
+}
+
 .site-header.is-nav-hidden:not(.is-nav-open) {
   transform: translateY(calc(-100% - 0.5rem));
   opacity: 0;
@@ -418,11 +423,8 @@ button:hover {
   flex-shrink: 0;
   width: 100%;
   background: rgba(255, 255, 255, 0.35);
-  border-block: 1px solid rgba(255, 255, 255, 0.65);
-  border-bottom: 0;
-  box-shadow:
-    0 8px 32px rgba(31, 38, 135, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  border: 0;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
   -webkit-backdrop-filter: blur(40px) saturate(160%);
   backdrop-filter: blur(40px) saturate(160%);
 }
@@ -537,8 +539,8 @@ button:hover {
 
 .services__name {
   font-family: var(--font);
-  font-size: clamp(1.125rem, 9cqi, 5rem);
-  font-weight: 700;
+  font-size: var(--text-hero-subtitle);
+  font-weight: 400;
   line-height: 1.05;
   letter-spacing: -0.04em;
   text-transform: uppercase;
@@ -895,16 +897,36 @@ button:hover {
   }
 }
 
+.hero__brand {
+  --hero-logo-h: min(52vw, 28rem);
+  --hero-circle: var(--hero-logo-h);
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  align-self: center;
+  flex: 1 1 auto;
+  width: max-content;
+  max-width: calc(100% - 2 * var(--page-padding));
+  gap: clamp(0.65rem, 1.6vw, 1.25rem);
+  padding-inline: 0;
+  box-sizing: border-box;
+  /* Sube logo + subtítulo + círculo */
+  transform: translateY(-5vh);
+}
+
 .hero__logo {
-  --hero-circle: min(52vw, 28rem);
+  --hero-circle: inherit;
   position: relative;
   z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 1 1 auto;
-  width: 100%;
-  max-width: none;
+  flex: 0 0 auto;
+  width: max-content;
+  max-width: 100%;
   margin-inline: 0;
   overflow: visible;
   isolation: isolate;
@@ -932,8 +954,8 @@ button:hover {
   z-index: 1;
   display: block;
   width: auto;
-  height: var(--hero-circle);
-  max-width: none;
+  height: var(--hero-logo-h, var(--hero-circle));
+  max-width: 100%;
   object-fit: contain;
   background: transparent;
 }
@@ -960,6 +982,55 @@ button:hover {
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
+}
+
+.hero__subtitle {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: var(--font);
+  font-size: var(--text-hero-subtitle);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: normal;
+  text-align: left;
+  text-transform: uppercase;
+  color: #000000;
+  white-space: nowrap;
+}
+
+.hero__subtitle-br {
+  display: none;
+}
+
+/* Desktop explícito */
+@media (min-width: 769px) {
+  :root {
+    --text-hero-subtitle: clamp(1.5rem, 2.6vw, 2.75rem);
+  }
+
+  .hero__brand {
+    --hero-logo-h: min(52vw, 30rem);
+    --hero-circle: var(--hero-logo-h);
+    align-items: stretch;
+    gap: clamp(0.75rem, 1.5vw, 1.35rem);
+  }
+
+  .hero__logo-img {
+    height: var(--hero-logo-h);
+    width: auto;
+    max-width: none;
+  }
+
+  .hero__subtitle {
+    display: block;
+    width: 100%;
+    font-size: var(--text-hero-subtitle);
+    font-weight: 700;
+    letter-spacing: normal;
+    text-align: left;
+  }
 }
 
 @keyframes hero-credit-spin {
@@ -1005,7 +1076,8 @@ button:hover {
   gap: clamp(0.8rem, 2vw, 2rem);
   width: max-content;
   padding: clamp(0.6rem, 1.44vw, 1rem) 0;
-  animation: marquee-scroll 28s linear infinite;
+  --marquee-duration: 28s;
+  animation: marquee-scroll var(--marquee-duration) linear infinite;
   will-change: transform;
 }
 
@@ -4785,10 +4857,11 @@ button:hover {
 
 @media (max-width: 768px) {
   :root {
+    --text-hero-subtitle: clamp(1.15rem, 4.2vw, 1.55rem);
     --page-padding: 1.125rem;
     --text-section: clamp(1.05rem, 4.6vw, 1.35rem);
     --text-body: clamp(1rem, 4.2vw, 1.2rem);
-    --header-offset: 4rem;
+    --header-offset: 5.25rem;
   }
 
   html,
@@ -4803,10 +4876,31 @@ button:hover {
   .site-header {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: space-between;
     position: fixed;
     overflow: visible;
     padding: 0.85rem var(--page-padding);
+  }
+
+  .site-header__logo {
+    display: block;
+    position: relative;
+    z-index: 130;
+    flex: 0 1 auto;
+    width: auto;
+    max-width: min(41.4vw, 10.35rem);
+    margin: 0;
+    padding: 0;
+    line-height: 0;
+    pointer-events: auto;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .site-header__logo img {
+    display: block;
+    width: 100%;
+    height: auto;
   }
 
   .site-header--project {
@@ -4814,6 +4908,10 @@ button:hover {
     flex-wrap: nowrap;
     row-gap: 0;
     column-gap: 0.85rem;
+  }
+
+  .site-header--project .site-header__logo {
+    display: none;
   }
 
   .nav-toggle {
@@ -4846,12 +4944,12 @@ button:hover {
     height: auto;
     max-height: calc(100dvh - var(--header-offset));
     margin: 0;
-    padding: 1.5rem var(--page-padding) 2rem;
+    padding: 1.15rem var(--page-padding) 2rem;
     overflow-x: hidden;
     overflow-y: auto;
     background: var(--glass-bg);
-    border-bottom: 1px solid var(--glass-border);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+    border-bottom: 0;
+    box-shadow: none;
     -webkit-backdrop-filter: blur(28px) saturate(160%);
     backdrop-filter: blur(28px) saturate(160%);
     opacity: 0;
@@ -4882,16 +4980,15 @@ button:hover {
   }
 
   .site-header.is-nav-open {
-    background: var(--glass-bg);
-    border-bottom-color: var(--glass-border);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
-    -webkit-backdrop-filter: blur(28px) saturate(160%);
-    backdrop-filter: blur(28px) saturate(160%);
+    background: transparent;
+    border-bottom-color: transparent;
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
 
   @supports not (backdrop-filter: blur(1px)) {
-    .site-nav,
-    .site-header.is-nav-open {
+    .site-nav {
       background: rgba(255, 255, 255, 0.96);
     }
   }
@@ -4953,20 +5050,51 @@ button:hover {
     padding-top: var(--header-offset);
   }
 
-  .hero__logo {
+  .hero__brand {
     --hero-size: calc(100vw - 2 * var(--page-padding));
-    --hero-logo-w: var(--hero-size);
+    --hero-logo-h: auto;
     --hero-circle: var(--hero-size);
-    width: 100%;
+    width: min(100%, var(--hero-size));
+    max-width: var(--hero-size);
+    gap: 0;
+  }
+
+  .hero__logo {
+    --hero-logo-w: 100%;
+    width: var(--hero-circle);
+    height: var(--hero-circle);
     max-width: none;
-    padding-inline: var(--page-padding);
+    padding-inline: 0;
     box-sizing: border-box;
+    align-self: center;
+    z-index: 4;
   }
 
   .hero__logo-img {
-    width: var(--hero-logo-w);
+    display: none;
+  }
+
+  .hero__subtitle {
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    left: 0;
+    right: 0;
+    width: 100%;
     max-width: 100%;
-    height: auto;
+    margin: 0;
+    font-size: var(--text-hero-subtitle);
+    font-weight: 700;
+    letter-spacing: normal;
+    text-align: left;
+    white-space: nowrap;
+    line-height: 1.12;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  .hero__subtitle-br {
+    display: block;
   }
 
   .hero__credit,
@@ -5000,7 +5128,7 @@ button:hover {
   }
 
   .services__name {
-    font-size: clamp(1.65rem, 9.5vw, 2.75rem);
+    font-size: var(--text-hero-subtitle);
     white-space: normal;
     letter-spacing: -0.03em;
   }
@@ -5109,7 +5237,7 @@ button:hover {
 @media (max-width: 480px) {
   :root {
     --page-padding: 1rem;
-    --header-offset: 3.75rem;
+    --header-offset: 5rem;
   }
 
   .site-nav {
@@ -5141,9 +5269,8 @@ button:hover {
     font-size: calc(var(--project-intro-size) * 0.72);
   }
 
-  .hero__logo {
+  .hero__brand {
     --hero-size: calc(100vw - 2 * var(--page-padding));
-    --hero-logo-w: var(--hero-size);
     --hero-circle: var(--hero-size);
   }
 

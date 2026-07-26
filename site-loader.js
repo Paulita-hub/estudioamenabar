@@ -42,14 +42,180 @@
       const half = track.scrollWidth / 2;
       if (!half) return;
       const duration = Math.max(18, half / pxPerSecond);
-      track.style.animationDuration = `${duration}s`;
+      track.style.setProperty("--marquee-duration", `${duration}s`);
+      track.style.removeProperty("animation-duration");
     });
   };
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", syncMarqueeSpeed, { once: true });
-  } else {
+  const setupMarqueeHover = () => {
+    if (!window.matchMedia("(hover: hover)").matches) return;
+
+    const bindMarquee = (marquee) => {
+      if (marquee.dataset.marqueeHoverBound) return;
+      marquee.dataset.marqueeHoverBound = "1";
+      const track = marquee.querySelector(".marquee__track");
+      if (!track) return;
+
+      const setRate = (rate) => {
+        const apply = () => {
+          const animations = track.getAnimations();
+          if (!animations.length) return false;
+          animations.forEach((animation) => {
+            animation.playbackRate = rate;
+          });
+          return true;
+        };
+        if (!apply()) requestAnimationFrame(apply);
+      };
+
+      marquee.addEventListener("pointerenter", () => setRate(0.35));
+      marquee.addEventListener("pointerleave", () => setRate(1));
+    };
+
+    // Home + páginas de proyecto (project-intro__marquee)
+    document
+      .querySelectorAll(".marquee, .project-intro__marquee")
+      .forEach(bindMarquee);
+  };
+
+  const getLogoInkBounds = (logo) => {
+    try {
+      const width = logo.naturalWidth;
+      const height = logo.naturalHeight;
+      if (!width || !height) return null;
+
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d", { willReadFrequently: true });
+      if (!ctx) return null;
+
+      ctx.clearRect(0, 0, width, height);
+      ctx.drawImage(logo, 0, 0);
+      const { data } = ctx.getImageData(0, 0, width, height);
+
+      let minX = width;
+      let maxX = 0;
+      for (let y = 0; y < height; y += 1) {
+        for (let x = 0; x < width; x += 1) {
+          if (data[(y * width + x) * 4 + 3] > 8) {
+            if (x < minX) minX = x;
+            if (x > maxX) maxX = x;
+          }
+        }
+      }
+      if (maxX < minX) return null;
+      return { minX, maxX, width };
+    } catch (_) {
+      return null;
+    }
+  };
+
+  const fitHeroSubtitle = () => {
+    const logo = document.querySelector(".hero__logo-img");
+    const subtitle = document.querySelector(".hero__subtitle");
+    const logoBox = document.querySelector(".hero__logo");
+    if (!subtitle) return;
+
+    const isMobile = window.matchMedia("(max-width: 768px)").matches;
+    const breaks = subtitle.querySelectorAll(".hero__subtitle-br");
+
+    let offsetLeft = 0;
+    let targetWidth = 0;
+
+    if (isMobile && logoBox) {
+      const boxRect = logoBox.getBoundingClientRect();
+      // Mismo margen izq/der respecto al círculo
+      targetWidth = boxRect.width;
+    } else if (logo) {
+      const logoRect = logo.getBoundingClientRect();
+      if (!logoRect.width) return;
+
+      const ink = getLogoInkBounds(logo);
+      const scale =
+        logoRect.width / (ink?.width || logo.naturalWidth || logoRect.width);
+      offsetLeft = ink ? ink.minX * scale : 0;
+      targetWidth = ink
+        ? (ink.maxX - ink.minX + 1) * scale
+        : logoRect.width;
+    }
+
+    if (!targetWidth) return;
+
+    subtitle.style.setProperty("display", "block");
+    subtitle.style.setProperty("box-sizing", "border-box");
+    subtitle.style.setProperty("max-width", "none");
+    subtitle.style.setProperty("font-weight", "700");
+    subtitle.style.setProperty("letter-spacing", "normal");
+
+    if (isMobile) {
+      // nowrap: solo los <br> parten líneas ("desarrollo web" no se parte)
+      subtitle.style.setProperty("white-space", "nowrap");
+      subtitle.style.setProperty("text-align", "left");
+      subtitle.style.setProperty("margin-left", "0");
+      subtitle.style.setProperty("left", "0");
+      subtitle.style.setProperty("top", "50%");
+      subtitle.style.setProperty("transform", "translateY(-50%)");
+      breaks.forEach((br) => br.style.setProperty("display", "block"));
+    } else {
+      subtitle.style.setProperty("white-space", "nowrap");
+      subtitle.style.setProperty("text-align", "left");
+      subtitle.style.setProperty("margin-left", `${offsetLeft}px`);
+      subtitle.style.removeProperty("left");
+      subtitle.style.removeProperty("top");
+      subtitle.style.removeProperty("transform");
+      breaks.forEach((br) => br.style.setProperty("display", "none"));
+    }
+
+    // max-content: scrollWidth = línea más larga (no el ancho forzado)
+    subtitle.style.setProperty("width", "max-content");
+
+    let low = 12;
+    let high = Math.min(isMobile ? 200 : 120, targetWidth / (isMobile ? 3 : 6));
+    for (let i = 0; i < 24; i += 1) {
+      const mid = (low + high) / 2;
+      subtitle.style.fontSize = `${mid}px`;
+      if (subtitle.scrollWidth <= targetWidth + 0.5) low = mid;
+      else high = mid;
+    }
+    const subtitleSize = low;
+    // Servicios más chicos que el subtítulo; no se agrandan con el fit
+    const servicesSize = isMobile ? subtitleSize / 1.286 : subtitleSize;
+    subtitle.style.fontSize = `${subtitleSize}px`;
+    subtitle.style.setProperty("width", `${targetWidth}px`);
+    document.documentElement.style.setProperty(
+      "--text-hero-subtitle",
+      `${servicesSize}px`
+    );
+  };
+
+  const initMarquee = () => {
     syncMarqueeSpeed();
+    setupMarqueeHover();
+  };
+
+  const initHeroSubtitle = () => {
+    const logo = document.querySelector(".hero__logo-img");
+    const run = () => {
+      fitHeroSubtitle();
+      if (document.fonts?.ready) {
+        document.fonts.ready.then(fitHeroSubtitle).catch(() => {});
+      }
+    };
+    if (logo && !logo.complete) {
+      logo.addEventListener("load", run, { once: true });
+    }
+    run();
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initMarquee, { once: true });
+    document.addEventListener("DOMContentLoaded", initHeroSubtitle, { once: true });
+  } else {
+    initMarquee();
+    initHeroSubtitle();
   }
-  window.addEventListener("load", syncMarqueeSpeed, { once: true });
+  window.addEventListener("load", initMarquee, { once: true });
+  window.addEventListener("load", initHeroSubtitle, { once: true });
+  window.addEventListener("resize", fitHeroSubtitle);
 })();
