@@ -120,6 +120,32 @@ body[data-liquid-colors] {
   background: #ff8f55;
 }
 
+/* Fondo animado del home (gradiente CSS) */
+body.has-animated-gradient {
+  background: linear-gradient(-45deg, #a855c8, #8b5cf6, #c9a227, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: animated-gradient 15s ease infinite;
+}
+
+@keyframes animated-gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.has-animated-gradient {
+    animation: none;
+    background-position: 0% 50%;
+  }
+}
+
 body::-webkit-scrollbar {
   width: 0;
   height: 0;
@@ -5140,8 +5166,10 @@ button:hover {
   }
 
   .hero__glass {
-    -webkit-backdrop-filter: blur(18px);
-    backdrop-filter: blur(18px);
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.2);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
   }
 
   .services__name {
