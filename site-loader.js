@@ -213,12 +213,76 @@
     run();
   };
 
+  const initGlassCursor = () => {
+    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+    if (!finePointer.matches) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const cursor = document.createElement("div");
+    cursor.className = "glass-cursor";
+    cursor.setAttribute("aria-hidden", "true");
+    document.body.appendChild(cursor);
+    document.documentElement.classList.add("has-glass-cursor");
+
+    let x = 0;
+    let y = 0;
+    let visible = false;
+
+    const interactiveSelector =
+      "a, button, [role='button'], input, textarea, select, label, summary, .nav-toggle, .proyectos-carousel__btn, .proyectos-carousel__dot, .project-view-toggle__btn";
+
+    const move = (clientX, clientY) => {
+      x = clientX;
+      y = clientY;
+      cursor.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
+      if (!visible) {
+        visible = true;
+        cursor.classList.add("is-visible");
+      }
+    };
+
+    window.addEventListener(
+      "pointermove",
+      (event) => {
+        if (event.pointerType && event.pointerType !== "mouse") return;
+        move(event.clientX, event.clientY);
+      },
+      { passive: true }
+    );
+
+    document.addEventListener("pointerover", (event) => {
+      if (event.target?.closest?.(interactiveSelector)) {
+        cursor.classList.add("is-hover");
+      }
+    });
+
+    document.addEventListener("pointerout", (event) => {
+      if (event.target?.closest?.(interactiveSelector)) {
+        cursor.classList.remove("is-hover");
+      }
+    });
+
+    document.addEventListener("pointerdown", () => {
+      cursor.classList.add("is-down");
+    });
+    document.addEventListener("pointerup", () => {
+      cursor.classList.remove("is-down");
+    });
+
+    document.addEventListener("mouseleave", () => {
+      visible = false;
+      cursor.classList.remove("is-visible", "is-hover", "is-down");
+    });
+  };
+
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", initMarquee, { once: true });
     document.addEventListener("DOMContentLoaded", initHeroSubtitle, { once: true });
+    document.addEventListener("DOMContentLoaded", initGlassCursor, { once: true });
   } else {
     initMarquee();
     initHeroSubtitle();
+    initGlassCursor();
   }
   window.addEventListener("load", initMarquee, { once: true });
   window.addEventListener("load", initHeroSubtitle, { once: true });
