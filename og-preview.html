@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vista previa OG — Estudio Amenábar</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #0e1621;
+        color: #e9edef;
+        display: grid;
+        place-items: center;
+        padding: 2rem 1rem;
+      }
+      .wrap {
+        width: min(100%, 420px);
+        display: grid;
+        gap: 1.25rem;
+      }
+      h1 {
+        margin: 0;
+        font-size: 0.95rem;
+        font-weight: 600;
+        opacity: 0.75;
+        text-align: center;
+      }
+      .bubble {
+        background: #005c4b;
+        border-radius: 10px 10px 10px 2px;
+        padding: 0.35rem;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      }
+      .card {
+        overflow: hidden;
+        border-radius: 8px;
+        background: #025144;
+      }
+      .card img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 1200 / 630;
+        object-fit: cover;
+        background: #000;
+      }
+      .meta {
+        padding: 0.65rem 0.75rem 0.8rem;
+      }
+      .meta .title {
+        margin: 0 0 0.2rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        line-height: 1.25;
+        color: #e9edef;
+      }
+      .meta .desc {
+        margin: 0 0 0.35rem;
+        font-size: 0.8rem;
+        line-height: 1.35;
+        color: rgba(233, 237, 239, 0.72);
+      }
+      .meta .url {
+        margin: 0;
+        font-size: 0.75rem;
+        color: rgba(233, 237, 239, 0.55);
+        text-transform: lowercase;
+      }
+      .time {
+        margin: 0.25rem 0.4rem 0.15rem;
+        text-align: right;
+        font-size: 0.68rem;
+        opacity: 0.7;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Vista previa al pegar el link (estilo WhatsApp)</h1>
+      <div class="bubble">
+        <div class="card">
+          <img src="assets/OG.png" alt="Vista previa Open Graph" />
+          <div class="meta">
+            <p class="title">Estudio Amenábar | Diseño visual &amp; desarrollo web</p>
+            <p class="desc">
+              Diseño gráfico desde Buenos Aires por Paula Dominguez.
+            </p>
+            <p class="url">estudioamenabar.com</p>
+          </div>
+        </div>
+        <p class="time">18:50</p>
+      </div>
+    </div>
+  </body>
+</html>

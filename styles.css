@@ -116,10 +116,6 @@ p,
   text-wrap: pretty;
 }
 
-body[data-liquid-colors] {
-  background: #ff8f55;
-}
-
 /* Fondo animado del home (gradiente CSS) */
 body.has-animated-gradient {
   background: linear-gradient(-45deg, #a855c8, #8b5cf6, #c9a227, #23a6d5, #23d5ab);
@@ -213,16 +209,6 @@ body.nav-lock {
     animation: none;
     transition-duration: 0ms;
   }
-}
-
-#liquid-bg {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-  pointer-events: none;
 }
 
 a {
