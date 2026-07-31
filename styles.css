@@ -4619,6 +4619,15 @@ button:hover {
   margin-top: clamp(0.8rem, 2vw, 1.4rem);
 }
 
+/* Mar del Plata: aire entre marquee, libro y reproductor (~49% del original; sin recortar el libro) */
+.project-page--mardelplata .project-band--book-player .project-band__cell--book {
+  padding: clamp(0.49rem, 1.225vw, 0.98rem);
+}
+
+.project-page--mardelplata .project-band--book-player .project-shots-carousel--player-only {
+  margin-top: clamp(0.392rem, 0.98vw, 0.686rem);
+}
+
 .project-band__cell--phone {
   padding: clamp(1.5rem, 4vw, 3rem) clamp(0.75rem, 2vw, 1.5rem);
 }
@@ -5413,6 +5422,14 @@ button:hover {
     top: 0;
     width: 100%;
     height: 100%;
+  }
+
+  .project-page--mardelplata .project-band--book-player .project-band__cell--book {
+    padding: clamp(0.368rem, 1.47vw, 0.613rem);
+  }
+
+  .project-page--mardelplata .project-band--book-player .project-shots-carousel--player-only {
+    margin-top: clamp(0.392rem, 0.98vw, 0.686rem);
   }
 }
 
